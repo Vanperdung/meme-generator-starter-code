@@ -12,7 +12,7 @@ def load_image(path):
 def resize_image(img: Image, width=500):
     aspect_ratio = img.height / img.width
     new_height = int(width * aspect_ratio)
-    resized_img = img.resize((width, new_height), Image.ANTIALIAS)
+    resized_img = img.resize((width, new_height), Image.LANCZOS)
     return resized_img
 
 def add_text(img: Image, text: str, author: str, font_path=None, font_size=20):
