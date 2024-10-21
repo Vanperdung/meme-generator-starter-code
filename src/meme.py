@@ -1,7 +1,19 @@
 import os
 import random
+from ingestor import Ingestor, QuoteModel
+from engine import MemeEngine
+import argparse
 
-# @TODO Import your Ingestor and MemeEngine classes
+def get_images_path(folder):
+    """
+    Get all subdirectories in the given folder that contain .jpg image files.
+    """
+    jpg_files = []
+    
+    for root, dirs, files in os.walk(folder):
+        jpg_files.extend([os.path.join(root, f) for f in files if f.lower().endswith('.jpg')])
+    
+    return jpg_files
 
 
 def generate_meme(path=None, body=None, author=None):
@@ -40,9 +52,17 @@ def generate_meme(path=None, body=None, author=None):
 
 
 if __name__ == "__main__":
-    # @TODO Use ArgumentParser to parse the following CLI arguments
-    # path - path to an image file
-    # body - quote body to add to the image
-    # author - quote author to add to the image
-    args = None
-    print(generate_meme(args.path, args.body, args.author))
+    parser = argparse.ArgumentParser(description="Generate a meme by adding a quote to an image")
+    parser.add_argument('--path', type=str, required=True, help="Directory containing image files")
+    parser.add_argument('--body', type=str, required=True, help="Quote body to add to the image")
+    parser.add_argument('--author', type=str, required=True, help="Author of the quote")
+    args = parser.parse_args()
+    
+    if args.path:
+        img_path = get_images_path(args.path)
+        if not img_path:
+            raise Exception(f"No .jpg files found in the directory: {args.path}")
+    else:
+        img_path = None
+        
+    print(generate_meme(img_path, args.body, args.author))

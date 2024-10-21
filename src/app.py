@@ -2,8 +2,9 @@ import random
 import os
 import requests
 from flask import Flask, render_template, abort, request
-
-# @TODO Import your Ingestor and MemeEngine classes
+from ingestor import Ingestor
+from engine import MemeEngine
+import tempfile
 
 app = Flask(__name__)
 
@@ -17,16 +18,21 @@ def setup():
                    './_data/DogQuotes/DogQuotesDOCX.docx',
                    './_data/DogQuotes/DogQuotesPDF.pdf',
                    './_data/DogQuotes/DogQuotesCSV.csv']
-
-    # TODO: Use the Ingestor class to parse all files in the
-    # quote_files variable
-    quotes = None
-
+    quotes = []
+    
+    for quote_file in quote_files:
+        try:
+            parsed_quotes = Ingestor.parse(quote_file)
+            quotes.extend(parsed_quotes) 
+        except ValueError as error:
+            print(f"Error parsing {quote_file}: {error}")
+    
     images_path = "./_data/photos/dog/"
+    imgs = []
 
-    # TODO: Use the pythons standard library os class to find all
-    # images within the images images_path directory
-    imgs = None
+    for filename in os.listdir(images_path):
+        file_path = os.path.join(images_path, filename)
+        imgs.append(file_path)
 
     return quotes, imgs
 
@@ -38,13 +44,8 @@ quotes, imgs = setup()
 def meme_rand():
     """ Generate a random meme """
 
-    # @TODO:
-    # Use the random python standard library class to:
-    # 1. select a random image from imgs array
-    # 2. select a random quote from the quotes array
-
-    img = None
-    quote = None
+    img = random.choice(imgs)
+    quote = random.choice(quotes)
     path = meme.make_meme(img, quote.body, quote.author)
     return render_template('meme.html', path=path)
 
@@ -66,7 +67,28 @@ def meme_post():
     #    file and the body and author form paramaters.
     # 3. Remove the temporary saved image.
 
-    path = None
+    image_url = request.form['image_url']
+    body = request.form['body']
+    author = request.form['author']
+    
+    try:
+        response = requests.get(image_url)
+        response.raise_for_status()
+        
+        temp_img = tempfile.NamedTemporaryFile(delete=False, suffix=".jpg")
+        temp_img.write(response.content)
+        temp_img.close()
+        
+        meme = MemeEngine('./static')
+        path = meme.make_meme(temp_img.name, body, author)
+        
+        os.remove(temp_img.name)
+    except requests.exceptions.RequestException as e:
+        print(f"Error downloading image: {e}")
+        return "Error downloading image", 400
+    except Exception as e:
+        print(f"Error creating meme: {e}")
+        return "Error creating meme", 500
 
     return render_template('meme.html', path=path)
 
