@@ -21,9 +21,9 @@ def add_text(img: Image, text: str, author: str, font_path=None, font_size=20):
         if font_path:
             font = ImageFont.truetype(font_path, size=font_size)
         else:
-            font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", size=font_size)
+            font = ImageFont.truetype("./_data/font/DejaVuSans-Bold.ttf", size=font_size)
     except IOError:
-        raise Exception(f"Cannot load font at {font_path or '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'}")
+        raise Exception(f"Cannot load font at {font_path or './_data/font/DejaVuSans-Bold.ttf'}")
     
     text_to_be_added = f'{text}\n- {author}'
     draw.text((10, 30), text_to_be_added, font=font, fill="white")
