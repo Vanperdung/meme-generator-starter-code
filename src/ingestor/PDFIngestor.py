@@ -1,12 +1,15 @@
+"""PDFIngestor.py."""
 import PyPDF2
 from .IngestorInterface import IngestorInterface
 from typing import List
 from .QuoteModel import QuoteModel
 
 class PDFIngestor(IngestorInterface):
+    """PDFIngestor class is used to parse quote in PDF file."""
     
     @classmethod
     def can_ingest(cls, path: str) -> bool:
+        """Check suffix of this path."""
         path_list = path.split('.')
         if len(path_list) > 1:
             suffix = path_list[-1]
@@ -17,6 +20,7 @@ class PDFIngestor(IngestorInterface):
 
     @classmethod
     def parse(cls, path: str) -> List[QuoteModel]:
+        """Parse all quotes in this path."""
         if not cls.can_ingest(path):
             raise ValueError(f'Cant ingest this path {path}')
         

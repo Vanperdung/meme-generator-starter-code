@@ -1,3 +1,4 @@
+"""meme.py: A module to generate memes by adding quotes to images."""
 import os
 import random
 from ingestor import Ingestor, QuoteModel
@@ -6,7 +7,7 @@ import argparse
 
 
 def generate_meme(path=None, body=None, author=None):
-    """ Generate a meme given an path and a quote """
+    """Generate a meme given an path and a quote."""
     img = None
     quote = None
 

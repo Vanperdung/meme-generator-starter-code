@@ -1,8 +1,10 @@
+"""Meme Engine is used to generate memes."""
 from PIL import Image, ImageDraw, ImageFont
 import os
 
 
 def load_image(path):
+    """Open the image path."""
     try:
         img = Image.open(path)
         return img
@@ -10,12 +12,14 @@ def load_image(path):
         raise Exception(f"Cannot open image {path}")
 
 def resize_image(img: Image, width=500):
+    """Resize the image."""
     aspect_ratio = img.height / img.width
     new_height = int(width * aspect_ratio)
     resized_img = img.resize((width, new_height), Image.LANCZOS)
     return resized_img
 
 def add_text(img: Image, text: str, author: str, font_path=None, font_size=20):
+    """Add quote to the image."""
     draw = ImageDraw.Draw(img)
     try:
         if font_path:
@@ -30,6 +34,7 @@ def add_text(img: Image, text: str, author: str, font_path=None, font_size=20):
     return img
 
 def save_image(img: Image, output_dir: str, filename="meme.jpg"):
+    """Save the meme to output directory."""
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     path = os.path.join(output_dir, filename)
@@ -37,23 +42,14 @@ def save_image(img: Image, output_dir: str, filename="meme.jpg"):
     return path
 
 class MemeEngine:
-    """
-    The Meme Engine Module is responsible for manipulating and drawing text onto images.        
-    :param output_dir: Directory to save generated memes.
-    """
+    """The Meme Engine Module is responsible for manipulating and drawing text onto images."""
+    
     def __init__(self, output_dir: str):
+        """Initialize the MemeEngine object."""
         self.output_dir = output_dir
 
     def make_meme(self, path, text, author, width=500) -> str:
-        """
-        Generate a meme.
-
-        :param path: Path to the input image.
-        :param text: Quote text to add to the image.
-        :param author: Author of the quote.
-        :param width: Maximum width of the output image (default: 500).
-        :return: Path to the saved meme image.
-        """
+        """Generate a meme."""
         try:
             img = load_image(path)
             img = resize_image(img, width)

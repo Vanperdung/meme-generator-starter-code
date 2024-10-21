@@ -1,3 +1,4 @@
+"""__init__.py."""
 from .Ingestor import Ingestor
 from .IngestorInterface import IngestorInterface
 from .TextIngestor import TextIngestor
