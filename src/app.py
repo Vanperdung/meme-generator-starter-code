@@ -19,14 +19,14 @@ def setup():
                    './_data/DogQuotes/DogQuotesPDF.pdf',
                    './_data/DogQuotes/DogQuotesCSV.csv']
     quotes = []
-    
+
     for quote_file in quote_files:
         try:
             parsed_quotes = Ingestor.parse(quote_file)
-            quotes.extend(parsed_quotes) 
+            quotes.extend(parsed_quotes)
         except ValueError as error:
             print(f"Error parsing {quote_file}: {error}")
-    
+
     images_path = "./_data/photos/dog/"
     imgs = []
 
@@ -61,18 +61,18 @@ def meme_post():
     image_url = request.form['image_url']
     body = request.form['body']
     author = request.form['author']
-    
+
     try:
         response = requests.get(image_url)
         response.raise_for_status()
-        
+
         temp_img = tempfile.NamedTemporaryFile(delete=False, suffix=".jpg")
         temp_img.write(response.content)
         temp_img.close()
-        
+
         meme = MemeEngine('./static')
         path = meme.make_meme(temp_img.name, body, author)
-        
+
         os.remove(temp_img.name)
     except requests.exceptions.RequestException as e:
         print(f"Error downloading image: {e}")

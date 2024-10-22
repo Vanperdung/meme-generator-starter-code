@@ -20,7 +20,7 @@ def generate_meme(path=None, body=None, author=None):
         img = random.choice(imgs)
     else:
         img = path
-    
+
     if body is None:
         quote_files = ['./_data/DogQuotes/DogQuotesTXT.txt',
                        './_data/DogQuotes/DogQuotesDOCX.docx',
@@ -42,10 +42,10 @@ def generate_meme(path=None, body=None, author=None):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Generate a meme by adding a quote to an image")
-    parser.add_argument('--path', type=str, help="Directory containing image files")
-    parser.add_argument('--body', type=str, help="Quote body to add to the image")
+    parser = argparse.ArgumentParser(description="Generate a meme")
+    parser.add_argument('--path', type=str, help="Directory containing image")
+    parser.add_argument('--body', type=str, help="Quote body")
     parser.add_argument('--author', type=str, help="Author of the quote")
     args = parser.parse_args()
-        
+
     print(generate_meme(args.path, args.body, args.author))

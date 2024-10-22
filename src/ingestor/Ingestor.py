@@ -10,7 +10,7 @@ from .QuoteModel import QuoteModel
 
 class Ingestor(IngestorInterface):
     """Ingestor class is used to parse quote in all files."""
-    
+
     ingestors = [TextIngestor, CSVIngestor, DocxIngestor, PDFIngestor]
 
     @classmethod

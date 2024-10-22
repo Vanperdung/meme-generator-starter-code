@@ -1,6 +1,7 @@
 """Meme Engine is used to generate memes."""
 from PIL import Image, ImageDraw, ImageFont
 import os
+import random
 
 
 def load_image(path):
@@ -11,12 +12,14 @@ def load_image(path):
     except IOError:
         raise Exception(f"Cannot open image {path}")
 
+
 def resize_image(img: Image, width=500):
     """Resize the image."""
     aspect_ratio = img.height / img.width
     new_height = int(width * aspect_ratio)
     resized_img = img.resize((width, new_height), Image.LANCZOS)
     return resized_img
+
 
 def add_text(img: Image, text: str, author: str, font_path=None, font_size=20):
     """Add quote to the image."""
@@ -25,13 +28,21 @@ def add_text(img: Image, text: str, author: str, font_path=None, font_size=20):
         if font_path:
             font = ImageFont.truetype(font_path, size=font_size)
         else:
-            font = ImageFont.truetype("./_data/font/DejaVuSans-Bold.ttf", size=font_size)
+            font = ImageFont.truetype("./_data/font/font.ttf", size=font_size)
     except IOError:
-        raise Exception(f"Cannot load font at {font_path or './_data/font/DejaVuSans-Bold.ttf'}")
-    
+        raise Exception(f"Cant load {font_path or './_data/font/font.ttf'}")
+
     text_to_be_added = f'{text}\n- {author}'
-    draw.text((10, 30), text_to_be_added, font=font, fill="white")
+    img_width, img_height = img.size
+    text_width, text_height = draw.textsize(text_to_be_added, font=font)
+    max_x = img_width - text_width
+    max_y = img_height - text_height
+    x = random.randint(0, max_x) if max_x > 0 else 0
+    y = random.randint(0, max_y) if max_y > 0 else 0
+
+    draw.text((x, y), text_to_be_added, font=font, fill="white")
     return img
+
 
 def save_image(img: Image, output_dir: str, filename="meme.jpg"):
     """Save the meme to output directory."""
@@ -41,9 +52,10 @@ def save_image(img: Image, output_dir: str, filename="meme.jpg"):
     img.save(path)
     return path
 
+
 class MemeEngine:
-    """The Meme Engine Module is responsible for manipulating and drawing text onto images."""
-    
+    """The Meme Engine Module."""
+
     def __init__(self, output_dir: str):
         """Initialize the MemeEngine object."""
         self.output_dir = output_dir

@@ -13,9 +13,9 @@ class TextIngestor(IngestorInterface):
         path_list = path.split('.')
         if len(path_list) > 1:
             suffix = path_list[-1]
-        else: 
+        else:
             suffix = ''
-        
+
         return suffix == 'txt'
 
     @classmethod
@@ -23,7 +23,7 @@ class TextIngestor(IngestorInterface):
         """Parse all quotes in this path."""
         if not cls.can_ingest(path):
             raise ValueError(f'Cant ingest this path {path}')
-        
+
         quotes = []
         with open(path, 'r', encoding='utf-8') as file:
             for line in file.readlines():
